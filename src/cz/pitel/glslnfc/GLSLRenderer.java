@@ -15,7 +15,6 @@ public class GLSLRenderer implements Renderer {
 	private int program, position, resolution, mouse, time;
 	private float w, h;
 	private long start;
-	//private final IntBuffer resolutionBuffer = IntBuffer.allocate(2);
 
 	private static final String vertexShaderCode =
 		"attribute vec2 position;" +
