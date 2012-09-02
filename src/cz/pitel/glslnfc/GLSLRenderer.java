@@ -106,7 +106,7 @@ public class GLSLRenderer implements Renderer {
 		//Log.v("GLSL", "onDrawFrame");
 		GLES20.glUniform2f(resolution, w, h);
 		GLES20.glUniform2f(mouse, w / 2f, h / 2f);
-		GLES20.glUniform1f(time,  (System.currentTimeMillis() - start) / 1000f);
+		GLES20.glUniform1f(time, (System.currentTimeMillis() - start) / 1000f);
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 	}
 
