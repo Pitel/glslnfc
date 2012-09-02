@@ -23,7 +23,9 @@ public class GLSLRenderer implements Renderer {
 		"}";
 
 	private static final String fragmentShaderCode =
-		"precision highp float;" +
+		"#ifdef GL_ES\n" +
+		"precision highp float;\n" +
+		"#endif\n" +
 
 		"uniform float time;" +
 		"uniform vec2 mouse;" +
@@ -51,6 +53,7 @@ public class GLSLRenderer implements Renderer {
 	/*
 	private static final String fragmentShaderCode =
 		"precision mediump float;" +
+
 
 		"uniform float time;" +
 		"uniform vec2 mouse;" +
@@ -84,9 +87,11 @@ public class GLSLRenderer implements Renderer {
 		final int vs = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
 		GLES20.glShaderSource(vs, vertexShaderCode);
 		GLES20.glCompileShader(vs);
+		Log.i("GLSL", GLES20.glGetShaderInfoLog(vs));
 		final int fs = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
 		GLES20.glShaderSource(fs, fragmentShaderCode);
 		GLES20.glCompileShader(fs);
+		Log.i("GLSL", GLES20.glGetShaderInfoLog(fs));
 		program = GLES20.glCreateProgram();
 		GLES20.glAttachShader(program, vs);
 		GLES20.glAttachShader(program, fs);
