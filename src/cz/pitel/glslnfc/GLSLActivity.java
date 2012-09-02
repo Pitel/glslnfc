@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class GLSLActivity extends Activity {
 	private GLSLSurfaceView glsl;
@@ -25,6 +27,23 @@ public class GLSLActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		glsl.onResume();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.load:
+				//TODO
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	class GLSLSurfaceView extends GLSurfaceView {
