@@ -11,8 +11,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLSLRenderer implements Renderer {
 	private final static float[] verts = new float[] {-1,-1, 1,-1, -1,1, 1,-1, 1,1, -1,1};
-	private FloatBuffer quad;
-	private int vs, position, resolution, mouse, time;
+	private int program, resolution, mouse, time;
 	private float w, h;
 	private long start;
 
@@ -72,21 +71,7 @@ public class GLSLRenderer implements Renderer {
 
 	@Override
 	public void onSurfaceCreated(final GL10 gl, final EGLConfig config) {
-		start = System.currentTimeMillis();
 		GLES20.glClearColor(1, 0, 0, 1);
-
-		// Quad
-		final ByteBuffer bb = ByteBuffer.allocateDirect(verts.length * 4);
-		bb.order(ByteOrder.nativeOrder());
-		quad = bb.asFloatBuffer();
-		quad.put(verts);
-
-		// Vertex shader
-		vs = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-		GLES20.glShaderSource(vs, vertexShaderCode);
-		GLES20.glCompileShader(vs);
-		Log.i("GLSL", GLES20.glGetShaderInfoLog(vs));
-
 		setShader(fragmentShaderCode);
 	}
 
@@ -112,26 +97,46 @@ public class GLSLRenderer implements Renderer {
 	void setShader(final String shader) {
 		Log.v("GLSL", shader);
 
+		// Quad
+		final ByteBuffer bb = ByteBuffer.allocateDirect(verts.length * 4);
+		bb.order(ByteOrder.nativeOrder());
+		final FloatBuffer quad = bb.asFloatBuffer();
+		quad.put(verts);
 		quad.position(0);
 
+		// Vertex shader
+		final int vs = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+		GLES20.glShaderSource(vs, vertexShaderCode);
+		GLES20.glCompileShader(vs);
+		Log.i("GLSL", "Vertex: " + GLES20.glGetShaderInfoLog(vs));
+
+		// Fragment shader
 		final int fs = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
 		GLES20.glShaderSource(fs, shader);
 		GLES20.glCompileShader(fs);
-		Log.i("GLSL", "Shader: " + GLES20.glGetShaderInfoLog(fs));
-		//GLES20.glDeleteProgram(program);
-		final int program = GLES20.glCreateProgram();
-		GLES20.glAttachShader(program, vs);
-		GLES20.glAttachShader(program, fs);
+		Log.i("GLSL", "Fragment: " + GLES20.glGetShaderInfoLog(fs));
+
+		// Program
+		final int newprogram = GLES20.glCreateProgram();
+		GLES20.glAttachShader(newprogram, vs);
+		GLES20.glAttachShader(newprogram, fs);
+		GLES20.glDeleteShader(vs);
 		GLES20.glDeleteShader(fs);
-		GLES20.glLinkProgram(program);
-		Log.i("GLSL", "Program: " + GLES20.glGetProgramInfoLog(program));
+		GLES20.glLinkProgram(newprogram);
+		Log.i("GLSL", "Program: " + GLES20.glGetProgramInfoLog(newprogram));
+		GLES20.glDeleteProgram(program);
+		program = newprogram;
 		GLES20.glUseProgram(program);
-		position = GLES20.glGetAttribLocation(program, "position");
+
+		// Vertex array
+		final int position = GLES20.glGetAttribLocation(program, "position");
 		GLES20.glEnableVertexAttribArray(position);
 		GLES20.glVertexAttribPointer(position, 2, GLES20.GL_FLOAT, false, 2 * 4, quad);
-		resolution = GLES20.glGetUniformLocation(program, "resolution");
-		mouse = GLES20.glGetUniformLocation(program, "mouse");
-		time = GLES20.glGetUniformLocation(program, "time");
+
+		// Uniforms
+		resolution = GLES20.glGetUniformLocation(newprogram, "resolution");
+		mouse = GLES20.glGetUniformLocation(newprogram, "mouse");
+		time = GLES20.glGetUniformLocation(newprogram, "time");
 		start = System.currentTimeMillis();
 	}
 }
