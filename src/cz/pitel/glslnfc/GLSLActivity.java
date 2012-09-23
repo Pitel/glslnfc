@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +31,14 @@ public class GLSLActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		glsl = new GLSLSurfaceView(this);
 		setContentView(glsl);
+		final Intent intent = getIntent();
+		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			try {
+				new ShaderTask().execute(new URL("http://glsl.heroku.com/item/" + intent.getData().getFragment()));
+			} catch (MalformedURLException e) {
+				Log.w("GLSL", e);
+			}
+		}
 	}
 
 	@Override
@@ -88,6 +97,7 @@ public class GLSLActivity extends Activity {
 	private class ShaderTask extends AsyncTask<URL, Void, String> {
 		@Override
 		protected String doInBackground(final URL... url) {
+			Log.w("GLSLNFC", url[0].toString());
 			try {
 				final HttpURLConnection http = (HttpURLConnection) url[0].openConnection();
 				try {

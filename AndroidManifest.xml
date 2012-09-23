@@ -9,6 +9,15 @@
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+			<intent-filter>
+				<data android:scheme="http" />
+				<data android:scheme="https" />
+				<data android:host="glsl.heroku.com" />
+				<data android:pathPrefix="/e" />
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+			</intent-filter>
 		</activity>
 	</application>
 </manifest>
