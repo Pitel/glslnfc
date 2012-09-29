@@ -38,6 +38,8 @@ public class GLSLActivity extends Activity {
 			} catch (MalformedURLException e) {
 				Log.w("GLSL", e);
 			}
+		} else {
+			renderer.setShader(getPreferences(0).getString("shader", getString(R.string.default_shader)));
 		}
 	}
 
@@ -119,6 +121,7 @@ public class GLSLActivity extends Activity {
 		@Override
 		protected void onPostExecute(final String shader) {
 			renderer.setShader(shader);
+			getPreferences(0).edit().putString("shader", shader).apply();
 		}
 	}
 }
