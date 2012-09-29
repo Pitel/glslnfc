@@ -12,6 +12,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.EditText;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -93,6 +94,12 @@ public class GLSLActivity extends Activity {
 			setEGLContextClientVersion(2);
 			//setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
 			setRenderer(renderer);
+		}
+
+		@Override
+		public boolean onTouchEvent(final MotionEvent e) {
+			renderer.setMouse(e.getX(), e.getY());
+			return true;
 		}
 	}
 

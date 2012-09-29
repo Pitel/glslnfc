@@ -13,7 +13,7 @@ public class GLSLRenderer implements Renderer {
 	private final static float[] verts = new float[] {-1,-1, 1,-1, -1,1, 1,-1, 1,1, -1,1};
 	private FloatBuffer quad;
 	private int program, vs, resolution, mouse, time;
-	private float w, h;
+	private float w, h, mx = 0.5f, my = 0.5f;
 	private long start;
 	private boolean dirty = true;
 
@@ -73,16 +73,16 @@ public class GLSLRenderer implements Renderer {
 			GLES20.glVertexAttribPointer(position, 2, GLES20.GL_FLOAT, false, 2 * 4, quad);
 
 			// Uniforms
-			resolution = GLES20.glGetUniformLocation(newprogram, "resolution");
-			mouse = GLES20.glGetUniformLocation(newprogram, "mouse");
-			time = GLES20.glGetUniformLocation(newprogram, "time");
+			resolution = GLES20.glGetUniformLocation(program, "resolution");
+			mouse = GLES20.glGetUniformLocation(program, "mouse");
+			time = GLES20.glGetUniformLocation(program, "time");
 			start = System.currentTimeMillis();
 			dirty = false;
 		}
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 		//Log.v("GLSL", "onDrawFrame");
 		GLES20.glUniform2f(resolution, w, h);
-		GLES20.glUniform2f(mouse, w / 2f, h / 2f);
+		GLES20.glUniform2f(mouse, mx, my);
 		GLES20.glUniform1f(time, (System.currentTimeMillis() - start) / 1000f);
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 	}
@@ -99,5 +99,10 @@ public class GLSLRenderer implements Renderer {
 	void setShader(final String shader) {
 		this.shader = shader;
 		dirty = true;
+	}
+
+	void setMouse(final float x, final float y) {
+		mx = x / w;
+		my = 1 - y / h;
 	}
 }
