@@ -69,9 +69,9 @@ public class GLSLActivity extends Activity {
 				final EditText input = new EditText(this);
 				input.setInputType(InputType.TYPE_CLASS_NUMBER);
 				new AlertDialog.Builder(this)
-					.setTitle("Insert shader ID")
+					.setTitle(R.string.insert_shader_id)
 					.setView(input)
-					.setPositiveButton("Load", new DialogInterface.OnClickListener() {
+					.setPositiveButton(R.string.load, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int whichButton) {
 							try {

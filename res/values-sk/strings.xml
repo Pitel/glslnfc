@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="load_effect">Nahrať efekt</string>
+	<string name="load">Nahrať</string>
+	<string name="insert_shader_id">Vložte ID shaderu</string>
+</resources>
