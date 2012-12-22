@@ -19,7 +19,10 @@ public class GLSLRenderer implements Renderer {
 
 	private static final String vertexShaderCode =
 		"attribute vec2 position;" +
+		"attribute vec2 surfacePosAttrib;" +
+		"varying vec2 surfacePosition;" +
 		"void main() {" +
+			"surfacePosition = surfacePosAttrib;" +
 			"gl_Position = vec4(position, 0, 1);" +
 		"}";
 
