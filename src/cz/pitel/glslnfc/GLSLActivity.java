@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -59,6 +60,7 @@ public class GLSLActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.menu, menu);
+		MenuItemCompat.setShowAsAction(menu.findItem(R.id.load), MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
