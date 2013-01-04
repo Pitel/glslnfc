@@ -21,6 +21,7 @@ public class EditorFragment extends Fragment {
 		return inflater.inflate(R.layout.editor, container, false);
 	}
 
+	@Override
 	public void onResume() {
 		((EditText) getActivity().findViewById(R.id.editor)).setText("java");
 		((EditText) getView().findViewById(R.id.editor)).setText("java");
