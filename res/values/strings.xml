@@ -27,4 +27,6 @@
 	<string name="load_effect">Load effect</string>
 	<string name="load">Load</string>
 	<string name="insert_shader_id">Insert shader ID</string>
+	<string name="preview">Preview</string>
+	<string name="source">source</string>
 </resources>

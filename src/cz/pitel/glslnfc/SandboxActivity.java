@@ -1,5 +1,15 @@
 package cz.pitel.glslnfc;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import java.util.ArrayList;
+/*
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,11 +17,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.text.InputType;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.EditText;
@@ -23,8 +30,61 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+*/
 
-public class GLSLActivity extends Activity {
+public class SandboxActivity extends FragmentActivity {
+	private final ArrayList<Fragment> fragments = new ArrayList<Fragment>(2);
+
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.sandbox);
+		final FragmentManager fm = getSupportFragmentManager();
+		if (savedInstanceState != null) {
+			fragments.add(fm.getFragment(savedInstanceState, GLSLFragment.class.getName()));
+			fragments.add(fm.getFragment(savedInstanceState, GLSLFragment.class.getName()));
+		}
+		final ViewPager pager = (ViewPager) findViewById(R.id.pager);
+		final SandboxFragmentAdapter adapter = new SandboxFragmentAdapter(fm);
+		pager.setAdapter(adapter);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		getMenuInflater().inflate(R.menu.menu, menu);
+		MenuItemCompat.setShowAsAction(menu.findItem(R.id.load), MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		return true;
+	}
+
+	private class SandboxFragmentAdapter extends FragmentPagerAdapter {
+		private String[] pages;
+
+		public SandboxFragmentAdapter(final FragmentManager fm) {
+			super(fm);
+			pages = getResources().getStringArray(R.array.pages);
+			if (fragments.isEmpty()) {
+				fragments.add(new GLSLFragment());
+				fragments.add(new GLSLFragment());
+			}
+		}
+
+		@Override
+		public Fragment getItem(final int position) {
+			return fragments.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return pages.length;
+		}
+
+		@Override
+		public CharSequence getPageTitle(final int position) {
+			return pages[position];
+		}
+	}
+
+	/*
 	private GLSLSurfaceView glsl;
 	private final GLSLRenderer renderer = new GLSLRenderer();
 
@@ -133,4 +193,5 @@ public class GLSLActivity extends Activity {
 			getPreferences(0).edit().putString("shader", shader).apply();
 		}
 	}
+	*/
 }

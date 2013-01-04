@@ -3,4 +3,6 @@
 	<string name="load_effect">Nahrát efekt</string>
 	<string name="load">Nahrát</string>
 	<string name="insert_shader_id">Vložte ID shaderu</string>
+	<string name="preview">Náhled</string>
+	<string name="source">Zdroják</string>
 </resources>
