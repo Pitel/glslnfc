@@ -1,5 +1,10 @@
 package cz.pitel.glslnfc;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -7,29 +12,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import java.util.ArrayList;
-/*
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.opengl.GLSurfaceView;
-import android.os.AsyncTask;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.EditText;
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Scanner;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+/*
+import android.app.Activity;
+import android.opengl.GLSurfaceView;
+import android.view.MotionEvent;
 */
 
 public class SandboxActivity extends FragmentActivity {
@@ -47,6 +47,16 @@ public class SandboxActivity extends FragmentActivity {
 		final ViewPager pager = (ViewPager) findViewById(R.id.pager);
 		final SandboxFragmentAdapter adapter = new SandboxFragmentAdapter(fm);
 		pager.setAdapter(adapter);
+		final Intent intent = getIntent();
+		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			try {
+				new ShaderTask().execute(new URL("http://glsl.heroku.com/item/" + intent.getData().getFragment()));
+			} catch (MalformedURLException e) {
+				Log.w("GLSL", e);
+			}
+		} else {
+			//renderer.setShader(getPreferences(0).getString("shader", getString(R.string.default_shader)));
+		}
 	}
 
 	@Override
@@ -54,6 +64,32 @@ public class SandboxActivity extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.menu, menu);
 		MenuItemCompat.setShowAsAction(menu.findItem(R.id.load), MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.load:
+				final EditText input = new EditText(this);
+				input.setInputType(InputType.TYPE_CLASS_NUMBER);
+				new AlertDialog.Builder(this)
+					.setTitle(R.string.insert_shader_id)
+					.setView(input)
+					.setPositiveButton(R.string.load, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int whichButton) {
+							try {
+								new ShaderTask().execute(new URL("http://glsl.heroku.com/item/" + input.getText().toString()));
+							} catch (MalformedURLException e) {
+								Log.w("GLSL", e);
+							}
+						}
+					})
+					.show();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private class SandboxFragmentAdapter extends FragmentPagerAdapter {
@@ -81,6 +117,36 @@ public class SandboxActivity extends FragmentActivity {
 		@Override
 		public CharSequence getPageTitle(final int position) {
 			return pages[position];
+		}
+	}
+
+	private class ShaderTask extends AsyncTask<URL, Void, String> {
+		@Override
+		protected String doInBackground(final URL... url) {
+			Log.w("GLSLNFC", url[0].toString());
+			try {
+				final HttpURLConnection http = (HttpURLConnection) url[0].openConnection();
+				try {
+				JSONObject json = (JSONObject) new JSONTokener(new Scanner(http.getInputStream()).useDelimiter("\\A").next()).nextValue();
+					return json.getString("code");
+				} catch (IOException e) {
+					Log.w("GLSL", e);
+				} catch (JSONException e) {
+					Log.w("GLSL", e);
+				} finally {
+					http.disconnect();
+				}
+			} catch (IOException e) {
+				Log.w("GLSL", e);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final String shader) {
+			Log.v("GLSL", shader);
+			//renderer.setShader(shader);
+			getPreferences(Context.MODE_PRIVATE).edit().putString("shader", shader).apply();
 		}
 	}
 
@@ -117,39 +183,6 @@ public class SandboxActivity extends FragmentActivity {
 		glsl.onResume();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.menu, menu);
-		MenuItemCompat.setShowAsAction(menu.findItem(R.id.load), MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.load:
-				final EditText input = new EditText(this);
-				input.setInputType(InputType.TYPE_CLASS_NUMBER);
-				new AlertDialog.Builder(this)
-					.setTitle(R.string.insert_shader_id)
-					.setView(input)
-					.setPositiveButton(R.string.load, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int whichButton) {
-							try {
-								new ShaderTask().execute(new URL("http://glsl.heroku.com/item/" + input.getText().toString()));
-							} catch (MalformedURLException e) {
-								Log.w("GLSL", e);
-							}
-						}
-					})
-					.show();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-
 	private class GLSLSurfaceView extends GLSurfaceView {
 		public GLSLSurfaceView(final Context context) {
 			super(context);
@@ -162,35 +195,6 @@ public class SandboxActivity extends FragmentActivity {
 		public boolean onTouchEvent(final MotionEvent e) {
 			renderer.setMouse(e.getX(), e.getY());
 			return true;
-		}
-	}
-
-	private class ShaderTask extends AsyncTask<URL, Void, String> {
-		@Override
-		protected String doInBackground(final URL... url) {
-			Log.w("GLSLNFC", url[0].toString());
-			try {
-				final HttpURLConnection http = (HttpURLConnection) url[0].openConnection();
-				try {
-				JSONObject json = (JSONObject) new JSONTokener(new Scanner(http.getInputStream()).useDelimiter("\\A").next()).nextValue();
-					return json.getString("code");
-				} catch (IOException e) {
-					Log.w("GLSL", e);
-				} catch (JSONException e) {
-					Log.w("GLSL", e);
-				} finally {
-					http.disconnect();
-				}
-			} catch (IOException e) {
-				Log.w("GLSL", e);
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(final String shader) {
-			renderer.setShader(shader);
-			getPreferences(0).edit().putString("shader", shader).apply();
 		}
 	}
 	*/
