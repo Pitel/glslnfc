@@ -11,11 +11,18 @@ import android.widget.EditText;
 public class EditorFragment extends Fragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+		/*
 		final View view = inflater.inflate(R.layout.editor, container, false);
 		final EditText editor = (EditText) view.findViewById(R.id.editor);
 		editor.setHorizontallyScrolling(true);
 		//editor.setText(getActivity().getPreferences(Context.MODE_PRIVATE).getString("shader", "blah"));
 		editor.setText("java");
-		return view;
+		*/
+		return inflater.inflate(R.layout.editor, container, false);
+	}
+
+	public void onResume() {
+		((EditText) getActivity().findViewById(R.id.editor)).setText("java");
+		((EditText) getView().findViewById(R.id.editor)).setText("java");
 	}
 }
