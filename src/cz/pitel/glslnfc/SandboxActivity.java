@@ -26,11 +26,6 @@ import java.util.Scanner;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-/*
-import android.app.Activity;
-import android.opengl.GLSurfaceView;
-import android.view.MotionEvent;
-*/
 
 public class SandboxActivity extends FragmentActivity {
 	private final ArrayList<Fragment> fragments = new ArrayList<Fragment>(2);
@@ -54,8 +49,6 @@ public class SandboxActivity extends FragmentActivity {
 			} catch (MalformedURLException e) {
 				Log.w("GLSL", e);
 			}
-		} else {
-			//renderer.setShader(getPreferences(0).getString("shader", getString(R.string.default_shader)));
 		}
 	}
 
@@ -148,55 +141,7 @@ public class SandboxActivity extends FragmentActivity {
 			//renderer.setShader(shader);
 			getPreferences(Context.MODE_PRIVATE).edit().putString("shader", shader).apply();
 			((EditorFragment) fragments.get(1)).setText(shader);
+			((GLSLFragment) fragments.get(0)).setShader(shader);
 		}
 	}
-
-	/*
-	private GLSLSurfaceView glsl;
-	private final GLSLRenderer renderer = new GLSLRenderer();
-
-	@Override
-	public void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		glsl = new GLSLSurfaceView(this);
-		setContentView(glsl);
-		final Intent intent = getIntent();
-		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-			try {
-				new ShaderTask().execute(new URL("http://glsl.heroku.com/item/" + intent.getData().getFragment()));
-			} catch (MalformedURLException e) {
-				Log.w("GLSL", e);
-			}
-		} else {
-			renderer.setShader(getPreferences(0).getString("shader", getString(R.string.default_shader)));
-		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		glsl.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		glsl.onResume();
-	}
-
-	private class GLSLSurfaceView extends GLSurfaceView {
-		public GLSLSurfaceView(final Context context) {
-			super(context);
-			setEGLContextClientVersion(2);
-			//setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
-			setRenderer(renderer);
-		}
-
-		@Override
-		public boolean onTouchEvent(final MotionEvent e) {
-			renderer.setMouse(e.getX(), e.getY());
-			return true;
-		}
-	}
-	*/
 }
