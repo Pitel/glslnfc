@@ -147,6 +147,7 @@ public class SandboxActivity extends FragmentActivity {
 			Log.v("GLSL", shader);
 			//renderer.setShader(shader);
 			getPreferences(Context.MODE_PRIVATE).edit().putString("shader", shader).apply();
+			((EditorFragment) fragments.get(1)).setText(shader);
 		}
 	}
 
