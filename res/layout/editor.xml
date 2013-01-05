@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/editor"
 android:layout_width="fill_parent"
-android:layout_height="fill_parent">
-	<EditText android:id="@+id/editor"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:inputType="text|textMultiLine|textNoSuggestions|textWebEditText"
-	android:imeOptions="actionDone"
-	android:typeface="monospace"
-	android:gravity="top"
-	/>
-</LinearLayout>
+android:layout_height="fill_parent"
+android:inputType="text|textMultiLine|textNoSuggestions|textWebEditText"
+android:imeOptions="actionDone"
+android:typeface="monospace"
+android:gravity="top"
+android:scrollHorizontally="true"
+/>

@@ -9,6 +9,6 @@ import android.view.ViewGroup;
 public class GLSLFragment extends Fragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.editor, container, false);
+		return inflater.inflate(R.layout.preview, container, false);
 	}
 }

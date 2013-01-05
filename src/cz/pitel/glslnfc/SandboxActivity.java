@@ -42,7 +42,7 @@ public class SandboxActivity extends FragmentActivity {
 		final FragmentManager fm = getSupportFragmentManager();
 		if (savedInstanceState != null) {
 			fragments.add(fm.getFragment(savedInstanceState, GLSLFragment.class.getName()));
-			fragments.add(fm.getFragment(savedInstanceState, GLSLFragment.class.getName()));
+			fragments.add(fm.getFragment(savedInstanceState, EditorFragment.class.getName()));
 		}
 		final ViewPager pager = (ViewPager) findViewById(R.id.pager);
 		final SandboxFragmentAdapter adapter = new SandboxFragmentAdapter(fm);
@@ -100,7 +100,7 @@ public class SandboxActivity extends FragmentActivity {
 			pages = getResources().getStringArray(R.array.pages);
 			if (fragments.isEmpty()) {
 				fragments.add(new GLSLFragment());
-				fragments.add(new GLSLFragment());
+				fragments.add(new EditorFragment());
 			}
 		}
 
