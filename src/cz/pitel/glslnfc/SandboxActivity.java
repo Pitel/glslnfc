@@ -36,6 +36,8 @@ public class SandboxActivity extends FragmentActivity {
 		setContentView(R.layout.sandbox);
 		final FragmentManager fm = getSupportFragmentManager();
 		if (savedInstanceState != null) {
+			Log.d("GLSL", "savedInstanceState");
+			fragments.clear();
 			fragments.add(fm.getFragment(savedInstanceState, GLSLFragment.class.getName()));
 			fragments.add(fm.getFragment(savedInstanceState, EditorFragment.class.getName()));
 		}
@@ -92,6 +94,7 @@ public class SandboxActivity extends FragmentActivity {
 			super(fm);
 			pages = getResources().getStringArray(R.array.pages);
 			if (fragments.isEmpty()) {
+				Log.d("GLSL", "Initializing fragments");
 				fragments.add(new GLSLFragment());
 				fragments.add(new EditorFragment());
 			}
