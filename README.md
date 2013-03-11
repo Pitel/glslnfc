@@ -1,3 +1,3 @@
 glslnfc
 =======
-Viewer for [GLSL Sandbox](//glsl.heroku.com) with NFC support
+Viewer for [GLSL Sandbox](https://glsl.heroku.com) with NFC support
