@@ -44,13 +44,12 @@ public class GLSLRenderer implements Renderer {
 		GLES20.glShaderSource(vs, vertexShaderCode);
 		GLES20.glCompileShader(vs);
 		Log.i("GLSL", "Vertex: " + GLES20.glGetShaderInfoLog(vs));
-
-		dirty = true;
 	}
 
 	@Override
 	public void onDrawFrame(final GL10 gl) {
 		if (dirty) {
+			Log.w("GLSL", "Dirty!!!");
 			Log.v("GLSL", shader);
 
 			// Fragment shader
@@ -94,6 +93,7 @@ public class GLSLRenderer implements Renderer {
 	public void onSurfaceChanged(final GL10 gl, final int width, final int height) {
 		Log.d("GLSL", Integer.toString(width));
 		Log.d("GLSL", Integer.toString(height));
+		dirty = true;
 		w = width;
 		h = height;
 		GLES20.glViewport(0, 0, width, height);
