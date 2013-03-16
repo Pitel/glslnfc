@@ -7,4 +7,5 @@
 	<string name="insert_shader_id">Insert shader ID</string>
 	<string name="preview">Preview</string>
 	<string name="source">Source</string>
+	<string name="wallpaper_description">GLSL shader live wallpaper</string>
 </resources>
